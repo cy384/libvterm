@@ -526,6 +526,37 @@ void vterm_copy_cells(VTermRect dest,
                       void (*copycell)(VTermPos dest, VTermPos src, void *user),
                       void *user);
 
+// hacks for ssheven to allow faster cell access
+
+/* State of the pen at some moment in time, also used in a cell */
+typedef struct
+{
+  /* After the bitfield */
+  VTermColor   fg, bg;
+
+  unsigned int bold      : 1;
+  unsigned int underline : 2;
+  unsigned int italic    : 1;
+  unsigned int blink     : 1;
+  unsigned int reverse   : 1;
+  unsigned int strike    : 1;
+  unsigned int font      : 4; /* 0 to 9 */
+
+  /* Extra state storage that isn't strictly pen-related */
+  unsigned int protected_cell : 1;
+  unsigned int dwl            : 1; /* on a DECDWL or DECDHL line */
+  unsigned int dhl            : 2; /* on a DECDHL line (1=top 2=bottom) */
+} ScreenPen;
+
+/* Internal representation of a screen cell */
+typedef struct
+{
+  uint32_t chars[VTERM_MAX_CHARS_PER_CELL];
+  ScreenPen pen;
+} ScreenCell;
+
+ScreenCell* vterm_screen_unsafe_get_cell(const VTermScreen *screen, VTermPos pos);
+
 #ifdef __cplusplus
 }
 #endif

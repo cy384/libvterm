@@ -9,33 +9,6 @@
 #define UNICODE_SPACE 0x20
 #define UNICODE_LINEFEED 0x0a
 
-/* State of the pen at some moment in time, also used in a cell */
-typedef struct
-{
-  /* After the bitfield */
-  VTermColor   fg, bg;
-
-  unsigned int bold      : 1;
-  unsigned int underline : 2;
-  unsigned int italic    : 1;
-  unsigned int blink     : 1;
-  unsigned int reverse   : 1;
-  unsigned int strike    : 1;
-  unsigned int font      : 4; /* 0 to 9 */
-
-  /* Extra state storage that isn't strictly pen-related */
-  unsigned int protected_cell : 1;
-  unsigned int dwl            : 1; /* on a DECDWL or DECDHL line */
-  unsigned int dhl            : 2; /* on a DECDHL line (1=top 2=bottom) */
-} ScreenPen;
-
-/* Internal representation of a screen cell */
-typedef struct
-{
-  uint32_t chars[VTERM_MAX_CHARS_PER_CELL];
-  ScreenPen pen;
-} ScreenCell;
-
 static int vterm_screen_set_cell(VTermScreen *screen, VTermPos pos, const VTermScreenCell *cell);
 
 struct VTermScreen
@@ -731,6 +704,11 @@ size_t vterm_screen_get_chars(const VTermScreen *screen, uint32_t *chars, size_t
 size_t vterm_screen_get_text(const VTermScreen *screen, char *str, size_t len, const VTermRect rect)
 {
   return _get_chars(screen, 1, str, len, rect);
+}
+
+ScreenCell* vterm_screen_unsafe_get_cell(const VTermScreen *screen, VTermPos pos)
+{
+	return getcell(screen, pos.row, pos.col);
 }
 
 /* Copy internal to external representation of a screen cell */
