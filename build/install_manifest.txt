@@ -1,3 +1,0 @@
-/home/palomides/src/Retro68-build/toolchain/m68k-apple-macos/include/vterm.h
-/home/palomides/src/Retro68-build/toolchain/m68k-apple-macos/include/vterm_keycodes.h
-/home/palomides/src/Retro68-build/toolchain/m68k-apple-macos/lib/libvterm.a

@@ -1,7 +1,0 @@
-/home/palomides/src/libvterm/libvterm-0.1.3/build/CMakeFiles/edit_cache.dir
-/home/palomides/src/libvterm/libvterm-0.1.3/build/CMakeFiles/install/strip.dir
-/home/palomides/src/libvterm/libvterm-0.1.3/build/CMakeFiles/install/local.dir
-/home/palomides/src/libvterm/libvterm-0.1.3/build/CMakeFiles/vterm.dir
-/home/palomides/src/libvterm/libvterm-0.1.3/build/CMakeFiles/rebuild_cache.dir
-/home/palomides/src/libvterm/libvterm-0.1.3/build/CMakeFiles/list_install_components.dir
-/home/palomides/src/libvterm/libvterm-0.1.3/build/CMakeFiles/install.dir
