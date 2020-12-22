@@ -11,36 +11,6 @@
 
 static int vterm_screen_set_cell(VTermScreen *screen, VTermPos pos, const VTermScreenCell *cell);
 
-struct VTermScreen
-{
-  VTerm *vt;
-  VTermState *state;
-
-  const VTermScreenCallbacks *callbacks;
-  void *cbdata;
-
-  VTermDamageSize damage_merge;
-  /* start_row == -1 => no damage */
-  VTermRect damaged;
-  VTermRect pending_scrollrect;
-  int pending_scroll_downward, pending_scroll_rightward;
-
-  int rows;
-  int cols;
-  int global_reverse;
-
-  /* Primary and Altscreen. buffers[1] is lazily allocated as needed */
-  ScreenCell *buffers[2];
-
-  /* buffer will == buffers[0] or buffers[1], depending on altscreen */
-  ScreenCell *buffer;
-
-  /* buffer for a single screen row used in scrollback storage callbacks */
-  VTermScreenCell *sb_buffer;
-
-  ScreenPen pen;
-};
-
 static inline ScreenCell *getcell(const VTermScreen *screen, int row, int col)
 {
   if(row < 0 || row >= screen->rows)
@@ -708,7 +678,7 @@ size_t vterm_screen_get_text(const VTermScreen *screen, char *str, size_t len, c
 
 ScreenCell* vterm_screen_unsafe_get_cell(const VTermScreen *screen, VTermPos pos)
 {
-	return getcell(screen, pos.row, pos.col);
+	return screen->buffer + (screen->cols * pos.row) + pos.col;
 }
 
 /* Copy internal to external representation of a screen cell */

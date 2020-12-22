@@ -557,6 +557,36 @@ typedef struct
 
 ScreenCell* vterm_screen_unsafe_get_cell(const VTermScreen *screen, VTermPos pos);
 
+struct VTermScreen
+{
+  VTerm *vt;
+  VTermState *state;
+
+  const VTermScreenCallbacks *callbacks;
+  void *cbdata;
+
+  VTermDamageSize damage_merge;
+  /* start_row == -1 => no damage */
+  VTermRect damaged;
+  VTermRect pending_scrollrect;
+  int pending_scroll_downward, pending_scroll_rightward;
+
+  int rows;
+  int cols;
+  int global_reverse;
+
+  /* Primary and Altscreen. buffers[1] is lazily allocated as needed */
+  ScreenCell *buffers[2];
+
+  /* buffer will == buffers[0] or buffers[1], depending on altscreen */
+  ScreenCell *buffer;
+
+  /* buffer for a single screen row used in scrollback storage callbacks */
+  VTermScreenCell *sb_buffer;
+
+  ScreenPen pen;
+};
+
 #ifdef __cplusplus
 }
 #endif
