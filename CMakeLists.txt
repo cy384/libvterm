@@ -7,8 +7,7 @@ if(CMAKE_SYSTEM_NAME MATCHES Retro68)
 #add_compile_options(-mcpu=68020)
 endif()
 
-#enable this once we figure out the compiler bug issue
-#add_compile_options(-O2)
+add_compile_options(-O2)
 
 add_compile_options(-Wno-attributes)
 
