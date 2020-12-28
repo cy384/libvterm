@@ -3,11 +3,15 @@ cmake_minimum_required(VERSION 3.9)
 project(vterm C)
 
 if(CMAKE_SYSTEM_NAME MATCHES Retro68)
-#enable this once we figure out the compiler bug issue
-#add_compile_options(-mcpu=68020)
+add_compile_options(-mcpu=68020)
+add_compile_options(-O3)
+add_compile_options(-ffunction-sections)
 endif()
 
-add_compile_options(-O2)
+if(CMAKE_SYSTEM_NAME MATCHES RetroPPC)
+add_compile_options(-O3)
+add_compile_options(-ffunction-sections)
+endif()
 
 add_compile_options(-Wno-attributes)
 
