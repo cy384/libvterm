@@ -264,6 +264,10 @@ enum {
   VTERM_N_PROP_MOUSES
 };
 
+#define VTERM_MOUSE_WANT_CLICK 0x01
+#define VTERM_MOUSE_WANT_DRAG  0x02
+#define VTERM_MOUSE_WANT_MOVE  0x04
+
 typedef struct {
   const uint32_t *chars;
   int             width;
