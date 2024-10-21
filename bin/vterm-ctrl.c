@@ -1,4 +1,4 @@
-#define _XOPEN_SOURCE 500  /* strdup */
+#define _XOPEN_SOURCE 600  /* strdup */
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -97,7 +97,7 @@ static void await_c1(unsigned char c1)
   }
 }
 
-static char *read_csi()
+static char *read_csi(void)
 {
   await_c1(0x9B); // CSI
 
@@ -117,7 +117,7 @@ static char *read_csi()
   return strdup(csi);
 }
 
-static char *read_dcs()
+static char *read_dcs(void)
 {
   await_c1(0x90);
 
@@ -125,7 +125,7 @@ static char *read_dcs()
   bool in_esc = false;
   int i = 0;
   for(; i < sizeof(dcs)-1; ) {
-    char c = getchar();
+    unsigned char c = getchar();
     if(c == 0x9c) // ST
       break;
     if(in_esc && c == 0x5c)

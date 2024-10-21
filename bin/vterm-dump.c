@@ -65,6 +65,8 @@ static int parser_control(unsigned char control, void *user)
 {
   if(control < 0x20)
     printf("%s%s%s", special_begin, name_c0[control], special_end);
+  else if(control == 0x7f)
+    printf("%s%s%s", special_begin, "DEL", special_end);
   else if(control >= 0x80 && control < 0xa0 && name_c1[control - 0x80])
     printf("%s%s%s", special_begin, name_c1[control - 0x80], special_end);
   else
@@ -154,16 +156,32 @@ static int parser_csi(const char *leader, const long args[], int argcount, const
   return 1;
 }
 
-static int parser_osc(const char *command, size_t cmdlen, void *user)
+static int parser_osc(int command, VTermStringFragment frag, void *user)
 {
-  printf("%sOSC %.*s%s", special_begin, (int)cmdlen, command, special_end);
+  if(frag.initial) {
+    if(command == -1)
+      printf("%sOSC ", special_begin);
+    else
+      printf("%sOSC %d;", special_begin, command);
+  }
+
+  printf("%.*s", (int)frag.len, frag.str);
+
+  if(frag.final)
+    printf("%s", special_end);
 
   return 1;
 }
 
-static int parser_dcs(const char *command, size_t cmdlen, void *user)
+static int parser_dcs(const char *command, size_t commandlen, VTermStringFragment frag, void *user)
 {
-  printf("%sDCS %.*s%s", special_begin, (int)cmdlen, command, special_end);
+  if(frag.initial)
+    printf("%sDCS %.*s", special_begin, (int)commandlen, command);
+
+  printf("%.*s", (int)frag.len, frag.str);
+
+  if(frag.final)
+    printf("%s", special_end);
 
   return 1;
 }
@@ -210,6 +228,7 @@ int main(int argc, char *argv[])
   VTerm *vt = vterm_new(25, 80);
   vterm_set_utf8(vt, 1);
   vterm_parser_set_callbacks(vt, &parser_cbs, NULL);
+  vterm_parser_set_emit_nul(vt, true);
 
   int len;
   char buffer[1024];
