@@ -25,7 +25,7 @@ add_library(vterm STATIC src/encoding.c
                          src/unicode.c
                          src/vterm.c)
 
-target_include_directories(vterm PRIVATE include)
+target_include_directories(vterm PUBLIC include)
 target_include_directories(vterm PRIVATE src)
 
 include(GNUInstallDirs)
